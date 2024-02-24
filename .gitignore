@@ -1,0 +1,6 @@
+.vscode/
+*.txt
+*.s32
+*.rdbg
+*.exe
+*.pdb
