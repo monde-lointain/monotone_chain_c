@@ -63,35 +63,31 @@ static pointset_t *compute_convex_hull(pointset_t *points)
     result->data = (point2d_t *)allocate_from_arena(points->count * sizeof(point2d_t));
     result->count = 0;
 
+    size_t n = points->count;
     size_t k = 0;
-    for (size_t i = 0; i < points->count; i++)
+    for (size_t i = 0; i < n; i++)
     {
         while (k >= 2 && orient2d(result->data + (k - 2), result->data + (k - 1), points->data + i) <= 0)
         {
             k--;
         }
-        point2d_t *p = result->data + k++;
-        p->x = (points->data + i)->x;
-        p->y = (points->data + i)->y;
+        point2d_t *pk = result->data + k++;
+        point2d_t *pi = points->data + i;
+        pk->x = pi->x;
+        pk->y = pi->y;
     }
 
-    for (size_t i = points->count - 1; i > 0; --i)
+    for (size_t i = n - 2, t = k + 1; i < SIZE_MAX; --i)
     {
-        size_t t = k + 1;
-
         while (k >= t && orient2d(result->data + (k - 2), result->data + (k - 1), points->data + i) <= 0)
         {
             k--;
         }
-        point2d_t *p = result->data + k++;
-        p->x = (points->data + i)->x;
-        p->y = (points->data + i)->y;
+        point2d_t *pk = result->data + k++;
+        point2d_t *pi = points->data + i;
+        pk->x = pi->x;
+        pk->y = pi->y;
     }
-
-    // Add the first point again at the end
-    (result->data + k)->x = result->data->x;
-    (result->data + k)->y = result->data->y;
-    k++;
 
     result->count = k;
 
